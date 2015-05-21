@@ -1,0 +1,125 @@
+# Use Xft?
+use_xft yes
+xftfont Open Sans Light:size=8
+xftalpha 0.8
+text_buffer_size 2048
+uppercase no
+
+# Update interval in seconds
+update_interval 1
+
+# This is the number of times Conky will update before quitting.
+# Set to zero to run forever.
+total_run_times 0
+
+# Create own window instead of using desktop (required in nautilus)
+own_window yes
+own_window_transparent yes
+own_window_type override
+own_window_class Conky
+own_window_hints below,skip_taskbar,skip_pager,undecorated,sticky
+own_window_argb_visual yes
+own_window_argb_value 110
+
+# Use double buffering (reduces flicker, may not work for everyone)
+double_buffer yes
+
+minimum_size 242
+
+# Draw shades?
+draw_shades no
+default_shade_color 292421
+# Draw outlines?
+draw_outline no
+
+# Draw borders around text
+draw_borders no
+
+# Stippled borders?
+stippled_borders 0
+
+# border margins
+#border_inner_margin 30
+#border_outer_margin 0
+draw_graph_borders no
+# border width
+border_width 0
+
+# Text alignment, other possible values are commented
+#alignment top_left
+alignment top_right
+#alignment bottom_left
+#alignment bottom_right
+
+# Gap between borders of screen and text
+# same thing as passing -x at command line
+gap_x 50
+# gap_y 40
+
+
+#	Open Sans Light             fonts
+#	Droid Sans
+
+
+imlib_cache_size 0
+
+# Green colors
+color1 f2f2f2
+color2 e2e2e2
+color3 ffffff
+color4 6db9d5
+color5 9de969
+color6 ca3d69
+color7 000000
+color8 9de969
+
+# Red colors
+# color1 f2f2f2
+# color2 e2e2e2
+# color3 ffffff
+# color4 6db9d5
+# color5 fd3633
+# color6 ca3d69
+# color7 000000
+# color8 700404
+
+
+# Background box
+lua_load ~/.conky-themes/draw_bg.lua
+lua_draw_hook_pre draw_bg
+
+TEXT
+${execi 300 curl -s "http://weather.yahooapis.com/forecastrss?w=715214&u=c" -o ~/.cache/weather.xml}
+
+${color1}${goto 30}${voffset 10}${font weather:size=66}${execi 300 bash ~/.conky-themes/conditions.sh}${voffset -27}${font Open Sans Light:size=42}${alignr}${execi 300 grep "yweather:condition" ~/.cache/weather.xml | grep -o "temp=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*"}°${font}
+${font Droid Sans:pixelsize=9}${color5}
+   Currently:${color1}${alignc}${execi 300 grep "yweather:condition" ~/.cache/weather.xml | grep -o "text=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*"}${color5}
+   Wind:${alignc}${color1}${execi 300 grep "yweather:wind" ~/.cache/weather.xml | grep -o "speed=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*"}${execi 300 grep "yweather:units" ~/.cache/weather.xml | grep -o "speed=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*"}${color5}
+   Humidity:${color1}${alignc}${execi 300 grep "yweather:atmosphere" ~/.cache/weather.xml | grep -o "humidity=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*"}%
+
+${color1} ${font weather:size=32}${goto 24}${execi 300 bash ~/.conky-themes/conditions-1.sh 1}${goto 128}${execi 300 bash ~/.conky-themes/conditions-1.sh 2}${goto 224}${execi 300 bash ~/.conky-themes/conditions-1.sh 3}${font Droid Sans:pixelsize=9}
+${goto 24}${color6}${execi 300 grep "yweather:forecast" ~/.cache/weather.xml | grep -o "high=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*" | awk 'NR==1'}°${color1}/${color4}${execi 300 grep "yweather:forecast" ~/.cache/weather.xml | grep -o "low=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*" | awk 'NR==1'}°${goto 128}${color6}${execi 300 grep "yweather:forecast" ~/.cache/weather.xml | grep -o "high=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*" | awk 'NR==2'}°${color1}/${color4}${execi 300 grep "yweather:forecast" ~/.cache/weather.xml | grep -o "low=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*" | awk 'NR==2'}°${goto 224}${color6}${execi 300 grep "yweather:forecast" ~/.cache/weather.xml | grep -o "high=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*" | awk 'NR==3'}°${color1}/${color4}${execi 300 grep "yweather:forecast" ~/.cache/weather.xml | grep -o "low=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*" | awk 'NR==3'}°
+
+${color5}${font Droid Sans:pixelsize=12}${goto 22}${execi 300 grep "yweather:forecast" ~/.cache/weather.xml | grep -o "day=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*" | awk 'NR==1' | tr '[a-z]' '[A-Z]'}${goto 126}${color1}${execi 300 grep "yweather:forecast" ~/.cache/weather.xml | grep -o "day=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*" | awk 'NR==2' | tr '[a-z]' '[A-Z]'}${goto 232}${execi 300 grep "yweather:forecast" ~/.cache/weather.xml | grep -o "day=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*" | awk 'NR==3' | tr '[a-z]' '[A-Z]'}${font}
+${color1}
+${hr}
+
+${goto 50}${font Open Sans Light:size=15}Disks
+${goto 14}${font Droid Sans:pixelsize=9}${color1}Read:${color1} ${color3}${diskio_read /dev/sda}${color1}${alignr}${goto 190}${color1}Write:${color1} ${color3}${diskio_write sda}${color}
+${goto 14}${color8}${diskiograph_read /dev/sda 50,120}${alignr}${goto 160}${diskiograph_write /dev/sda 50,120}${color1}
+
+${hr}
+
+${goto 74}${color1}${font Open Sans Light:size=15}Top Processes
+${goto 14}${color1}${font Droid Sans:pixelsize=9}${color5}${top_mem name 1}${color1}${alignc -10}${top_mem mem_res 1}${color2}${alignr}${goto 234}${top_mem mem 1}${color1} %
+${goto 14}${color1}${font Droid Sans:pixelsize=9}${color5}${top_mem name 2}${color1}${alignc -10}${top_mem mem_res 2}${color2}${alignr}${goto 234}${top_mem mem 2}${color1} %
+${goto 14}${color1}${font Droid Sans:pixelsize=9}${color5}${top_mem name 3}${color1}${alignc -10}${top_mem mem_res 3}${color2}${alignr}${goto 234}${top_mem mem 3}${color1} %
+${goto 14}${color1}${font Droid Sans:pixelsize=9}${color5}${top_mem name 4}${color1}${alignc -10}${top_mem mem_res 4}${color2}${alignr}${goto 234}${top_mem mem 4}${color1} %
+${goto 14}${color1}${font Droid Sans:pixelsize=9}${color5}${top_mem name 5}${color1}${alignc -10}${top_mem mem_res 5}${color2}${alignr}${goto 234}${top_mem mem 5}${color1} %
+
+${color1}
+${hr}
+
+${goto 74}${color1}${font Open Sans Light:size=15}TeamPortal
+${goto 14}${color1}${font Droid Sans:pixelsize=9}Last restart: ${color5}${alignr}${exec grep -i resuming /opt/teamportal/programs/core/apache/logs/tphttpd_error.log | tail -n 1 | sed 's/^\[\(.*\)\] \[.*:notice\].*/\1/'}${color1}
+${goto 14}${color1}${font Droid Sans:pixelsize=9}Last reload: ${color5}${alignr}${exec grep -i triggering /opt/teamportal/programs/core/apache/logs/tphttpd_error.log | tail -n 1 | sed 's/^\[\(.*\)\] \[:error\].*/\1/'}${color1}
