@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Unagi
+Comment=Unagi Compositing Manager
+Exec=unagi
+Terminal=false
+Type=Application
+Categories=
+OnlyShowIn=Awesome;
