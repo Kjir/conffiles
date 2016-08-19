@@ -10,6 +10,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dispatch'
+Plug 'radenling/vim-dispatch-neovim'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
@@ -59,6 +60,7 @@ Plug 'othree/javascript-libraries-syntax.vim', {'for': 'javascript'}
 Plug 'heavenshell/vim-jsdoc', {'for': 'javascript'}
 Plug 'pangloss/vim-javascript', {'for': 'javascript'}
 Plug 'juanpabloaj/vim-istanbul', {'for': 'javascript'}
+Plug 'carlitux/deoplete-ternjs', {'for': 'javascript'}
 
 " colorschemes
 Plug 'tomasr/molokai'
@@ -68,6 +70,11 @@ Plug 'croaker/mustang-vim'
 Plug 'nanotech/jellybeans.vim'
 Plug 'justincampbell/vim-railscasts'
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'mhinz/vim-janah'
+Plug 'morhetz/gruvbox'
+Plug 'dracula/vim'
+Plug 'whatyouhide/vim-gotham'
+Plug 'kabbamine/yowish.vim'
 
 call plug#end()
 
