@@ -61,6 +61,7 @@ Plug 'heavenshell/vim-jsdoc', {'for': 'javascript'}
 Plug 'pangloss/vim-javascript', {'for': 'javascript'}
 Plug 'juanpabloaj/vim-istanbul', {'for': 'javascript'}
 Plug 'carlitux/deoplete-ternjs', {'for': 'javascript'}
+Plug 'zchee/deoplete-jedi', {'for': 'python'}
 
 " colorschemes
 Plug 'tomasr/molokai'
