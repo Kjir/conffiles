@@ -31,6 +31,7 @@ Plug 'janko-m/vim-test'
 Plug 'lfilho/cosco.vim'
 Plug 'Chiel92/vim-autoformat'
 Plug 'haya14busa/incsearch.vim'
+Plug 'luochen1990/rainbow'
 
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
@@ -496,5 +497,9 @@ if exists('g:plugs["vim-istanbul"]')
 endif
 
 let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
+let g:rainbow_active = 0
+
+" Rich colours!
+set termguicolors
 
 " vim:ts=2:sw=2:et
