@@ -1,6 +1,5 @@
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'tpope/vim-sensible'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'Yggdroot/indentLine'
@@ -16,11 +15,13 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-rbenv'
 Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'unblevable/quick-scope'
 Plug 'scrooloose/nerdtree'
 Plug 'airblade/vim-gitgutter'
-Plug 'pyp/vim-sparkup'
+Plug 'rstacruz/sparkup', { 'rtp': 'vim/' }
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'Olical/vim-syntax-expand'
 Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
@@ -32,6 +33,10 @@ Plug 'lfilho/cosco.vim'
 Plug 'Chiel92/vim-autoformat'
 Plug 'haya14busa/incsearch.vim'
 Plug 'luochen1990/rainbow'
+Plug 'edkolev/tmuxline.vim'
+Plug 'gorodinskiy/vim-coloresque'
+Plug 'tpope/vim-haml'
+Plug 'sbdchd/neoformat'
 
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
@@ -41,15 +46,18 @@ if has('nvim')
     UpdateRemotePlugins
   endfunction
   Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
+  Plug 'fishbullet/deoplete-ruby', { 'for': 'ruby' }
+  Plug 'Shougo/deoplete-rct', {'for': 'ruby'}
   Plug 'ervandew/supertab'
-  Plug 'neomake/neomake'
+  Plug 'w0rp/ale'
 else
   Plug 'scrooloose/syntastic'
   Plug 'Valloric/YouCompleteMe', {'do': './install.py --tern-completer'}
+  Plug 'tpope/vim-sensible'
 endif
 
 " filetype plugins
-Plug 'vim-ruby/vim-ruby'
+Plug 'tpope/vim-rails', {'for': 'ruby'}
 Plug 'elzr/vim-json', {'for': 'json'}
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
 Plug 'ekalinin/Dockerfile.vim', {'for': 'Dockerfile'}
@@ -62,12 +70,22 @@ Plug 'heavenshell/vim-jsdoc', {'for': 'javascript'}
 Plug 'pangloss/vim-javascript', {'for': 'javascript'}
 Plug 'juanpabloaj/vim-istanbul', {'for': 'javascript'}
 Plug 'carlitux/deoplete-ternjs', {'for': 'javascript'}
+Plug 'galooshi/vim-import-js', {'for': 'javascript'}
+Plug 'mxw/vim-jsx', {'for': 'javascript'}
 Plug 'zchee/deoplete-jedi', {'for': 'python'}
+Plug 'leafgarland/typescript-vim', {'for': 'typescript'}
+Plug 'mhartington/nvim-typescript', {'for': 'typescript'}
+Plug 'slim-template/vim-slim', {'for': 'slim'}
+Plug 'elixir-lang/vim-elixir', {'for': 'elixir'}
+Plug 'elmcast/elm-vim', {'for': 'elm'}
+Plug 'pbogut/deoplete-elm', {'for': 'elm'}
+Plug 'kchmck/vim-coffee-script'
+Plug 'cespare/vim-toml'
 
 " colorschemes
 Plug 'tomasr/molokai'
-Plug 'Guardian'
-Plug 'Distinguished'
+Plug 'vim-scripts/Guardian'
+Plug 'vim-scripts/Distinguished'
 Plug 'croaker/mustang-vim'
 Plug 'nanotech/jellybeans.vim'
 Plug 'justincampbell/vim-railscasts'
@@ -77,6 +95,11 @@ Plug 'morhetz/gruvbox'
 Plug 'dracula/vim'
 Plug 'whatyouhide/vim-gotham'
 Plug 'kabbamine/yowish.vim'
+Plug 'altercation/vim-colors-solarized'
+Plug 'nightsense/seabird'
+Plug 'rakr/vim-one'
+Plug 'endel/vim-github-colorscheme'
+Plug 'google/vim-colorscheme-primary'
 
 call plug#end()
 
@@ -125,6 +148,8 @@ set expandtab
 
 set pumheight=10             " Completion window max size
 
+set shell=bash
+
 "http://stackoverflow.com/questions/20186975/vim-mac-how-to-copy-to-clipboard-without-pbcopy
 set clipboard^=unnamed
 set clipboard^=unnamedplus
@@ -149,26 +174,31 @@ if has("gui_macvim")
 
 
 else
-  if has('!nvim')
+  if !has('nvim')
     syntax enable
     set t_Co=256
   endif
 
   let g:rehash256 = 1
-  set background=dark
 
 endif
 
 " Neomake colors. To be defined before setting the colorscheme
-if exists('g:plugs["neomake"]')
-  augroup my_error_signs
-    au!
-    autocmd ColorScheme *
-          \ hi NeomakeErrorSign ctermfg=red
-  augroup end
-endif
+" if exists('g:plugs["neomake"]')
+"   augroup my_error_signs
+"     au!
+"     autocmd ColorScheme *
+"           \ hi NeomakeErrorSign ctermfg=red
+"   augroup end
+" endif
 
-colorscheme jellybeans
+if !has("gui_macvim")
+  set background=dark
+endif
+" Dark background
+" colorscheme one
+" Light background
+colorscheme one
 
 " open help vertically
 command! -nargs=* -complete=help Help vertical belowright help <args>
@@ -182,7 +212,7 @@ au BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
 
 autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2
 autocmd FileType javascript setlocal expandtab shiftwidth=2 tabstop=2
-autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2
+autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2 textwidth=120
 autocmd FileType php setlocal noexpandtab shiftwidth=4 tabstop=4
 
 augroup filetypedetect
@@ -319,7 +349,7 @@ if exists('g:plugs["delimitMate"]')
   let g:delimitMate_expand_inside_quotes = 0
   let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'
 
-  imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
+  " imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
 endif
 
 " ==================== Airline =====================
@@ -395,34 +425,11 @@ if exists('g:plugs["ultisnips"]')
   autocmd FileType php UltiSnipsAddFiletypes php-laravel
 endif
 
-" ==================== NeoMake ====================
-if exists('g:plugs["neomake"]')
-  let g:neomake_open_list = 2
-  let neomake_verbose = 0
-  let g:neomake_html_enabled_makers = ['htmlhint']
-  " Check on open and save
-  augroup neomake_au
-    autocmd!
-    autocmd BufWritePost * Neomake
-  augroup end
-endif
-
 " ==================== Syntastic ====================
 " This does what it says on the tin. It will check your file on open too, not just on save.
 " You might not want this, so just leave it out if you don't.
 if exists('g:plugs["syntastic"]')
   let g:syntastic_check_on_open=1
-  " Ignore vendini custom directives
-  let g:syntastic_html_tidy_blocklevel_tags=['vnd-stamp', 'vnd-search',
-        \ 'vnd-badge', 'vnd-table', 'vnd-tile', 'vnd-paginator', 'vnd-selectable-all',
-        \ 'vnd-selectable-row', 'vnd-delete-button', 'vnd-form-error', 'vnd-preview',
-        \ 'vnd-email-pane', 'vnd-breadcrumbs', 'vnd-phone-pane', 'vnd-household-pane',
-        \ 'vnd-dropdown', 'mh-activity-filter']
-  let g:syntastic_html_tidy_inline_tags=['vnd-icon']
-  let g:syntastic_html_tidy_ignore_errors=['<vnd-icon> attribute "size" has invalid value',
-        \ '<vnd-icon> attribute "text" has invalid value',
-        \ '<vnd-badge> attribute "text" has invalid value',
-        \ '<vnd-badge> attribute "size" has invalid value']
   let g:syntastic_javascript_checkers=['eslint', 'jshint']
 endif
 
@@ -451,7 +458,7 @@ let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 " omnifuncs
 augroup omnifuncs
   autocmd!
-  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType css,scss setlocal omnifunc=csscomplete#CompleteCSS
   autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
   " autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
   autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
@@ -473,7 +480,7 @@ let g:python3_host_prog = '/usr/local/bin/python3'
 
 " vim-test configuration
 let test#strategy = 'neovim'
-nnoremap <Leader>t :TestSuite<CR>
+nnoremap <Leader>t :TestNearest<CR>
 autocmd FileType javascript set makeprg=grunt
 let g:tmux_session=0
 
@@ -501,5 +508,28 @@ let g:rainbow_active = 0
 
 " Rich colours!
 set termguicolors
+
+" Slim/Slime templates
+autocmd BufNewFile,BufRead *.slim setlocal filetype=slim
+autocmd BufNewFile,BufRead *.slime setlocal filetype=slim
+
+" JSX in javascript files
+let g:jsx_ext_required = 0
+
+" Use formatprg when available to reformat code
+let g:neoformat_try_formatprg = 1
+autocmd FileType javascript set formatprg=prettier
+
+" Better ALE signs
+let g:ale_sign_error = '✖'
+let g:ale_sign_warning = '⚠'
+" Disable linting on erb files
+let g:ale_linters = { 'eruby': [] }
+
+" Enable automatic formatting
+augroup fmt
+  autocmd!
+  autocmd BufWritePre * try | undojoin | Neoformat | catch /^Vim\%((\a\+)\)\=:E790/ | endtry
+augroup END
 
 " vim:ts=2:sw=2:et
